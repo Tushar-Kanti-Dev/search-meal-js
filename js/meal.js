@@ -2,19 +2,34 @@ const searchField = () => {
     const inputField = document.getElementById('input-field');
     const searchText = inputField.value;
     inputField.value = '';
+    if (searchText == '') {
+        const noInput = document.getElementById('all-meal');
+        const p = document.createElement('p');
+        p.innerText = `What You Want`;
+        noInput.appendChild(p);
+    } else {
+        const url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchText}`
+        fetch(url)
+            .then(res => res.json())
+            .then(data => displaySerachResult(data.meals));
+    }
 
-    const url = `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchText}`
-    fetch(url)
-        .then(res => res.json())
-        .then(data => displaySerachResult(data.meals));
+
 }
 const displaySerachResult = meals => {
+    console.log(meals)
     const searchResult = document.getElementById('search-result');
-    meals.forEach(meal => {
+    searchResult.textContent = '';
+    // if condition not working 
+    if (meals.length != 0) {
+        // alert('not found')
+        console.log(meals.length);
+    } else {
+        meals.forEach(meal => {
 
-        const div = document.createElement('div');
-        div.classList.add('col');
-        div.innerHTML = `
+            const div = document.createElement('div');
+            div.classList.add('col');
+            div.innerHTML = `
         <div onclick="loadMealDetail(${meal.idMeal})" class="card container">
                     <img src="${meal.strMealThumb}" class="card-img-top img-fluid" alt="...">
                     <div class="card-body">
@@ -23,10 +38,11 @@ const displaySerachResult = meals => {
                     </div>
                 </div>
         `
-        searchResult.appendChild(div)
-            // console.log(meal);
+            searchResult.appendChild(div)
+                // console.log(meal);
 
-    });
+        });
+    }
     // console.log(meals)
 }
 const loadMealDetail = mealId => {
@@ -54,5 +70,5 @@ const displayMealDetails = meal => {
     `;
     randomDisplay.appendChild(div);
 
-    console.log(meal);
+    // console.log(meal);
 }
